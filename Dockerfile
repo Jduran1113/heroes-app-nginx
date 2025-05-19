@@ -1,11 +1,11 @@
 
-FROM nginx:1.23.3 AS dev-deps
+FROM node:19-alpine3.15 AS dev-deps
 WORKDIR /app
 COPY package.json package.json
 RUN yarn install --frozen-lockfile
 
 
-FROM nginx:1.23.3 AS builder
+FROM node:19-alpine3.15 AS builder
 WORKDIR /app
 COPY --from=dev-deps /app/node_modules ./node_modules
 COPY . .
