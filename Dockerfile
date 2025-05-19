@@ -13,6 +13,7 @@ COPY . .
 RUN yarn build
 
 # Si hay carpeta de distribucion no requerimos instalar las dependencias de produccion, pues ya van en dist
+
 # FROM nginx:1.23.3 AS prod-deps
 # WORKDIR /app
 # COPY package.json package.json
