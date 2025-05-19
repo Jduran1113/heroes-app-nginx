@@ -1,0 +1,51 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Git Semantic Version
+      uses: paulhatch/semantic-version@v5.4.0
+      with:
+        major_pattern: "MAJOR"
+        minor_pattern: "MINOR"
+        patch_pattern: "PATCH"
+        version_format: "v${major}.${minor}.${patch}"
+        search_commit_body: true
+      id: version
+
+    - name: Docker Login
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+        
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        
+    - name: Build Docker Image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker build -t joshuadv13/heroes-app:$NEW_VERSION .
+        docker build -t joshuadv13/heroes-app:latest .
+        
+    - name: Push Docker Image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker push joshuadv13/heroes-app:$NEW_VERSION
+        docker push joshuadv13/heroes-app:latest
