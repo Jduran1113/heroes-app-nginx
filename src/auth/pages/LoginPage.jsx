@@ -21,6 +21,7 @@ export const LoginPage = () => {
   return (
     <div className="container mt-5">
       <h1>Login</h1>
+      <h2>React Context API</h2>
       <hr />
 
       <button 
