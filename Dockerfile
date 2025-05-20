@@ -22,7 +22,8 @@ RUN yarn build
 FROM nginx:1.23.3 AS prod
 
 COPY --from=builder /app/dist /usr/share/nginx/html/
-COPY --from=builder /app/assets/heroes/ /usr/share/nginx/html/assets/heroes/
+# COPY --from=builder /app/assets/heroes/ /usr/share/nginx/html/assets/heroes/
+COPY assets/ /usr/share/nginx/html/assets
 RUN rm /etc/nginx/conf.d/default.conf
 
 COPY nginx/nginx.conf /etc/nginx/conf.d
